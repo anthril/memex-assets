@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memex://schemas/crm/deal",
+  "title": "Deal",
+  "description": "A revenue opportunity tied to a contact and/or company.",
+  "type": "object",
+  "required": ["stage", "amount", "currency"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": {
+      "const": "deal"
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["lead", "qualified", "proposal", "negotiation", "won", "lost"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["hot", "warm", "cold"]
+    },
+    "amount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3,
+      "description": "ISO 4217 currency code."
+    },
+    "company": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "string"
+    },
+    "expected_close": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-05-09T00:00:00Z",
+  "items": [
+    {
+      "id": "crm",
+      "name": "CRM",
+      "version": "0.1.0",
+      "author": "Anthril",
+      "description": "Light CRM transform: contact / company / deal frontmatter schemas plus filters for Hot Leads, Pipeline, and Recent Touchpoints.",
+      "type": "extension",
+      "extensionType": "workspace-transform",
+      "permissions": ["frontmatter:read", "frontmatter:write", "filter"],
+      "compatibleProfiles": ["*"],
+      "tags": ["crm", "filter", "schema", "sales"],
+      "manifest": "examples/crm/manifest.json",
+      "tarball": "examples/crm/"
+    },
+    {
+      "id": "kanban-view",
+      "name": "Kanban View",
+      "version": "0.1.0",
+      "author": "Anthril",
+      "description": "Renders any section as a kanban board, columnising pages by their `status` frontmatter. Drag a card to update its status.",
+      "type": "extension",
+      "extensionType": "view",
+      "permissions": ["frontmatter:write", "navigation", "view"],
+      "compatibleProfiles": ["*"],
+      "tags": ["view", "kanban", "tasks"],
+      "manifest": "examples/kanban-view/manifest.json",
+      "tarball": "examples/kanban-view/"
+    },
+    {
+      "id": "project-management",
+      "name": "Project Management",
+      "version": "0.1.0",
+      "author": "Anthril",
+      "description": "Project / milestone / task frontmatter schemas plus rolled-up status reports.",
+      "type": "extension",
+      "extensionType": "workspace-transform",
+      "permissions": ["frontmatter:read", "frontmatter:write", "filter"],
+      "compatibleProfiles": ["*"],
+      "tags": ["project", "tasks", "schema"],
+      "manifest": "examples/project-management/manifest.json",
+      "tarball": "examples/project-management/"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memex://schemas/crm/contact",
+  "title": "Contact",
+  "description": "A person you have a relationship with.",
+  "type": "object",
+  "required": ["name", "email"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": {
+      "const": "contact"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string",
+      "description": "ID or slug of the related company page."
+    },
+    "last_contacted": {
+      "type": "string",
+      "format": "date"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  }
+}

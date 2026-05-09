@@ -1,0 +1,54 @@
+{
+  "$schema": "../../manifest.schema.json",
+  "id": "crm",
+  "name": "CRM",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthril",
+    "url": "https://anthril.com.au"
+  },
+  "description": "Light CRM transform: contact / company / deal frontmatter schemas plus filters for Hot Leads, Pipeline, and Recent Touchpoints.",
+  "type": "extension",
+  "extensionType": "workspace-transform",
+  "entryPoints": {
+    "schemas": [
+      "schemas/contact.json",
+      "schemas/company.json",
+      "schemas/deal.json"
+    ],
+    "filters": [
+      {
+        "id": "hot-leads",
+        "label": "Hot Leads",
+        "frontmatter": {
+          "kind": "deal",
+          "stage": ["qualified", "proposal", "negotiation"],
+          "priority": "hot"
+        }
+      },
+      {
+        "id": "pipeline",
+        "label": "Pipeline",
+        "frontmatter": {
+          "kind": "deal",
+          "stage": ["lead", "qualified", "proposal", "negotiation"]
+        }
+      },
+      {
+        "id": "recent-touchpoints",
+        "label": "Recent Touchpoints",
+        "frontmatter": {
+          "kind": "contact",
+          "last_contacted": "$within-30d"
+        }
+      }
+    ]
+  },
+  "permissions": [
+    "frontmatter:write",
+    "navigation"
+  ],
+  "minimumMemexVersion": "0.2.0",
+  "compatibleProfiles": ["company", "engineering-ops"],
+  "tags": ["crm", "sales", "schema-pack"]
+}

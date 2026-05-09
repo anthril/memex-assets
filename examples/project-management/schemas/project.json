@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memex://schemas/project-management/project",
+  "title": "Project",
+  "description": "A long-lived effort grouping related tasks and milestones.",
+  "type": "object",
+  "required": ["status", "owner"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": {
+      "const": "project"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planning", "in-progress", "on-hold", "shipped", "cancelled"]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  }
+}

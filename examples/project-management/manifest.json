@@ -1,0 +1,71 @@
+{
+  "$schema": "../../manifest.schema.json",
+  "id": "project-management",
+  "name": "Project Management",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthril",
+    "url": "https://anthril.com.au"
+  },
+  "description": "Adds task / project / milestone frontmatter schemas, common section filters (Active Projects, My Tasks, Roadmap), and palette actions for fast task CRUD.",
+  "type": "extension",
+  "extensionType": "workspace-transform",
+  "entryPoints": {
+    "schemas": [
+      "schemas/task.json",
+      "schemas/project.json",
+      "schemas/milestone.json"
+    ],
+    "filters": [
+      {
+        "id": "active-projects",
+        "label": "Active Projects",
+        "frontmatter": {
+          "kind": "project",
+          "status": ["planning", "in-progress"]
+        }
+      },
+      {
+        "id": "my-tasks",
+        "label": "My Tasks",
+        "frontmatter": {
+          "kind": "task",
+          "assignee": "$me"
+        }
+      },
+      {
+        "id": "roadmap",
+        "label": "Roadmap",
+        "frontmatter": {
+          "kind": "milestone"
+        }
+      }
+    ],
+    "paletteActions": [
+      {
+        "id": "new-task",
+        "label": "New Task",
+        "description": "Create a task page with required frontmatter pre-filled."
+      },
+      {
+        "id": "new-project",
+        "label": "New Project",
+        "description": "Create a project page with required frontmatter pre-filled."
+      },
+      {
+        "id": "move-task-to-status",
+        "label": "Move Task to Status…",
+        "description": "Update the current page's `status` frontmatter via a sub-prompt."
+      }
+    ]
+  },
+  "permissions": [
+    "frontmatter:write",
+    "navigation",
+    "palette",
+    "command"
+  ],
+  "minimumMemexVersion": "0.2.0",
+  "compatibleProfiles": ["*"],
+  "tags": ["projects", "tasks", "schema-pack", "workflow"]
+}

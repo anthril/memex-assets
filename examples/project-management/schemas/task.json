@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memex://schemas/project-management/task",
+  "title": "Task",
+  "description": "A unit of work assignable to a person, owned by zero or one project.",
+  "type": "object",
+  "required": ["status", "priority", "assignee"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": {
+      "const": "task"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["todo", "in-progress", "blocked", "done", "cancelled"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["p0", "p1", "p2", "p3"]
+    },
+    "assignee": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Person identifier (handle, email, or display name)."
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "project": {
+      "type": "string",
+      "description": "ID or slug of the parent project page (optional)."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  }
+}

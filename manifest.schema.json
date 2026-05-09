@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthril.com.au/memex/schemas/extension-manifest.json",
+  "title": "Memex Extension Manifest",
+  "description": "Manifest format for a Memex extension as defined in ADR 0018. Extensions are workspace-shape transforms (frontmatter schemas, views, panel packs, palette additions) and are distinct from plugins (ADR 0004), which run executable JS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "author",
+    "description",
+    "type",
+    "extensionType",
+    "entryPoints",
+    "permissions",
+    "minimumMemexVersion",
+    "compatibleProfiles"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional pointer to this schema for editor intellisense; ignored by the loader."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Stable kebab-case identifier. Used as the directory name under .memex/.extensions/<id>/."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Human-readable display name."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "Semantic version (semver 2.0.0)."
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url":  { "type": "string", "format": "uri" },
+        "email": { "type": "string", "format": "email" }
+      }
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "type": {
+      "const": "extension",
+      "description": "Discriminator separating extensions from plugins (which use type: 'plugin')."
+    },
+    "extensionType": {
+      "type": "string",
+      "enum": ["view", "workspace-transform", "panel-pack", "schema-pack"],
+      "description": "Primary surface this extension contributes."
+    },
+    "entryPoints": {
+      "type": "object",
+      "description": "Map of surface kind to relative path inside the extension directory. All paths are workspace-relative under .memex/.extensions/<id>/.",
+      "additionalProperties": false,
+      "properties": {
+        "view":      { "type": "string" },
+        "panel":     { "type": "string" },
+        "schemas":   {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "filters":   {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "frontmatter"],
+            "properties": {
+              "id":          { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+              "label":       { "type": "string", "minLength": 1 },
+              "frontmatter": {
+                "type": "object",
+                "description": "Frontmatter key/value pairs to match. Values may be primitives or arrays of primitives (treated as 'one-of').",
+                "minProperties": 1
+              }
+            }
+          }
+        },
+        "paletteActions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label"],
+            "properties": {
+              "id":          { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)*$" },
+              "label":       { "type": "string", "minLength": 1 },
+              "description": { "type": "string" },
+              "shortcut":    { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "frontmatter:write",
+          "navigation",
+          "palette",
+          "panel",
+          "view",
+          "command"
+        ]
+      }
+    },
+    "minimumMemexVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    },
+    "compatibleProfiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Profile IDs this extension supports. Use ['*'] to indicate any profile."
+    },
+    "homepage":   { "type": "string", "format": "uri" },
+    "repository": { "type": "string", "format": "uri" },
+    "license":    { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  }
+}

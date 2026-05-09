@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memex://schemas/project-management/milestone",
+  "title": "Milestone",
+  "description": "A dated checkpoint that groups projects and signals delivery.",
+  "type": "object",
+  "required": ["status", "target_date"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": {
+      "const": "milestone"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["upcoming", "at-risk", "shipped", "missed"]
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "projects": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "description": "IDs or slugs of related project pages."
+    }
+  }
+}
