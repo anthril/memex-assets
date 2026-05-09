@@ -1,0 +1,32 @@
+name: Validate extension manifests
+
+on:
+  push:
+    paths:
+      - 'assets/extensions/**'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - 'assets/extensions/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: assets/extensions
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install validator deps
+        run: npm install --no-save ajv ajv-formats ajv-cli
+
+      - name: Validate manifests (Node script)
+        run: node .scripts/validate.mjs
+
+      - name: Validate manifests (ajv-cli, second pass)
+        run: npx ajv-cli validate --spec=draft2020 --strict=false -c ajv-formats -s manifest.schema.json -d "examples/*/manifest.json"

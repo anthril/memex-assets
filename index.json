@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated_at": "2026-05-09T00:00:00Z",
-  "items": [
+  "extensions": [
     {
       "id": "crm",
       "name": "CRM",
@@ -13,8 +13,8 @@
       "permissions": ["frontmatter:read", "frontmatter:write", "filter"],
       "compatibleProfiles": ["*"],
       "tags": ["crm", "filter", "schema", "sales"],
-      "manifest": "examples/crm/manifest.json",
-      "tarball": "examples/crm/"
+      "manifest": "extensions/examples/crm/manifest.json",
+      "tarball": "extensions/examples/crm/"
     },
     {
       "id": "kanban-view",
@@ -27,8 +27,8 @@
       "permissions": ["frontmatter:write", "navigation", "view"],
       "compatibleProfiles": ["*"],
       "tags": ["view", "kanban", "tasks"],
-      "manifest": "examples/kanban-view/manifest.json",
-      "tarball": "examples/kanban-view/"
+      "manifest": "extensions/examples/kanban-view/manifest.json",
+      "tarball": "extensions/examples/kanban-view/"
     },
     {
       "id": "project-management",
@@ -41,8 +41,34 @@
       "permissions": ["frontmatter:read", "frontmatter:write", "filter"],
       "compatibleProfiles": ["*"],
       "tags": ["project", "tasks", "schema"],
-      "manifest": "examples/project-management/manifest.json",
-      "tarball": "examples/project-management/"
+      "manifest": "extensions/examples/project-management/manifest.json",
+      "tarball": "extensions/examples/project-management/"
     }
+  ],
+  "plugins": [
+    {
+      "id": "dataview-lite",
+      "name": "Dataview Lite",
+      "version": "0.1.0",
+      "author": "Anthril",
+      "description": "Embed live page lists in any wiki page. Mirrors a tiny subset of Obsidian's Dataview — frontmatter-driven `from <folder>` / `where <key> = <value>` queries rendered into the host page.",
+      "type": "plugin",
+      "permissions": ["read", "panel"],
+      "compatibleProfiles": ["*"],
+      "tags": ["dataview", "queries", "panels", "reference"],
+      "manifest": "plugins/dataview-lite/manifest.json",
+      "tarball": "plugins/dataview-lite/"
+    }
+  ],
+  "plugin_templates": [
+    {"id": "generic", "name": "Generic", "description": "Default — flexible topics-based wiki", "path": "plugin-templates/generic"},
+    {"id": "engineering-ops", "name": "Engineering Ops", "description": "SaaS / platform team — features, systems, runbooks, ADRs", "path": "plugin-templates/engineering-ops"},
+    {"id": "research-project", "name": "Research Project", "description": "Active research — wiki + hypotheses + experiments", "path": "plugin-templates/research-project"},
+    {"id": "research-wiki", "name": "Research Wiki", "description": "Reading + synthesis — articles, summaries, concept entities", "path": "plugin-templates/research-wiki"},
+    {"id": "book-companion", "name": "Book Companion", "description": "Book reading — chapters, characters, themes, timeline", "path": "plugin-templates/book-companion"},
+    {"id": "personal-journal", "name": "Personal Journal", "description": "Journaling — daily entries, goals, reflections", "path": "plugin-templates/personal-journal"},
+    {"id": "personal-knowledge-graph", "name": "Personal Knowledge Graph", "description": "Zettelkasten — atomic notes, dense linking, daily journal, source notes", "path": "plugin-templates/personal-knowledge-graph"},
+    {"id": "company", "name": "Company", "description": "Internal company KB — people, teams, decisions, meetings, OKRs", "path": "plugin-templates/company"},
+    {"id": "tasks", "name": "Tasks", "description": "Task management — Kanban + Calendar + Timeline driven by frontmatter", "path": "plugin-templates/tasks"}
   ]
 }

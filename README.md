@@ -1,98 +1,83 @@
-# Memex Extensions
+# Memex Assets
 
-Public catalogue of **Memex extensions** — declarative bundles that reshape
-how a Memex workspace looks and behaves without shipping executable code.
+Public catalogue of community-contributable building blocks for **Memex by
+Anthril** — workspace knowledge bases editable from the desktop / web app.
 
-The Memex desktop app fetches `index.json` from this repo's `main` branch on
-each Marketplace open and lists what's available; users install one with a
-single click and the desktop client downloads the manifest + assets directly
-from `examples/<id>/` here.
-
-> Looking for the Memex desktop app? Installers live at
+> Looking for the desktop app? Installers + release notes live at
 > [`anthril/memex-releases`](https://github.com/anthril/memex-releases).
 
-## What is an extension?
+This repo has three subdirectories, each with its own README + contribution
+guide:
 
-A declarative bundle that contributes one or more of:
+| Subtree | What lives here | Shipped by | Trigger |
+|---|---|---|---|
+| **[`plugin-templates/`](./plugin-templates)** | Workspace profiles — initial folder layout + `memex.config.json` + frontmatter rules + seed pages for a domain (engineering, research, tasks, etc.) | Baked into the desktop binary at compile time via `include_dir!` | Picked in the setup wizard when the user creates a new workspace |
+| **[`plugins/`](./plugins)** | Executable JavaScript plugins that run inside a workspace and may write through the permission-gated `MemexPluginAPI` | Installed per-workspace into `<wks>/.memex/.plugins/<id>/` | User installs from the marketplace, or drops the folder in manually |
+| **[`extensions/`](./extensions)** | Declarative bundles — frontmatter schemas, alternate views, panel packs, palette additions — manifest + JSON only, **no executable surface** | Installed per-workspace into `<wks>/.memex/.extensions/<id>/` | User installs from the marketplace |
 
-- **Frontmatter schemas** — typed shapes for a kind of page (e.g. `task`,
-  `project`, `contact`).
-- **Views** — alternate renderings of a section (e.g. kanban, gallery,
-  calendar) selected by frontmatter.
-- **Panel packs** — collections of right-pane panels that surface relevant
-  metadata for a profile or domain.
-- **Palette additions** — pre-baked commands that streamline repetitive
-  edits (e.g. *Move task to Done*).
+## How the desktop app reads this repo
 
-Extensions are **distinct from plugins**. Plugins ship JavaScript that runs
-in the renderer; extensions ship only manifest + JSON assets. Extensions
-have no executable surface, are safe to enable by default, and are described
-fully by their manifest.
+- **Plugin templates** are compile-time embedded — when the desktop crate
+  builds, every file under `plugin-templates/` is baked into the binary so
+  the setup wizard works offline. New templates land in the next release.
+- **Plugins** and **extensions** are fetched at runtime by the Memex
+  marketplace API (`/api/v1/marketplace/extensions`) which reads
+  [`index.json`](./index.json) at this repo's `main` branch via the
+  `raw.githubusercontent.com` CDN, with a 5-minute cache layer in front.
+  Edits to `index.json` go live within five minutes of merge.
 
-## Catalogue
+## Development workflow
 
-| Extension | Type | Summary |
-|---|---|---|
-| [`crm`](examples/crm) | `workspace-transform` | Schemas + filters for contacts, companies, deals. |
-| [`kanban-view`](examples/kanban-view) | `view` | Columnises pages in a section by their `status` frontmatter. |
-| [`project-management`](examples/project-management) | `workspace-transform` | Schemas + filters + palette actions for tasks, projects, milestones. |
+This repo is consumed by the Memex monorepo as a **git submodule** at
+`assets/`. To work on Memex against your local edits:
 
-The same data is served as machine-readable JSON at
-[`index.json`](./index.json).
+```bash
+# In the parent repo:
+cd memex
+git submodule update --init --recursive
 
-## How extensions install
+# Make changes inside assets/ (the submodule) — git treats it as a separate repo
+cd assets
+git checkout main
+# edit, commit, push to anthril/memex-assets
 
-When you click **Install** in the Memex desktop app's Marketplace tab, the
-client:
+# Back in the parent: record the new submodule SHA
+cd ..
+git add assets
+git commit -m "chore(assets): bump submodule"
+```
 
-1. Reads `index.json` from this repo via `https://raw.githubusercontent.com/anthril/memex-extensions/main/index.json`.
-2. Downloads the chosen extension's `manifest.json` and any referenced
-   schema / view JSON files.
-3. Validates the manifest against [`manifest.schema.json`](./manifest.schema.json).
-4. Writes the bundle to your workspace at
-   `<workspace>/.memex/.extensions/<id>/`.
-5. Adds the id to `memex.config.json#/extensions/enabled` so the extension
-   activates on next workspace open.
+Or, if you only want to ship a new extension / plugin without touching the
+parent app:
 
-Extensions disabled via `memex.config.json#/extensions/disabled` are skipped
-even if listed as enabled. Ordering is deterministic by `enabled` array
-position.
+```bash
+git clone https://github.com/anthril/memex-assets
+cd memex-assets
+# add your contribution under extensions/examples/<id>/ etc.
+# run validators, open a PR
+```
 
 ## Repo layout
 
 ```
 .
-├── README.md                     this file
-├── CONTRIBUTING.md               how to propose an extension
-├── LICENSE                       MIT
-├── manifest.schema.json          JSON Schema (draft-2020-12)
-├── index.json                    machine-readable catalogue (Memex client reads this)
-├── .scripts/validate.mjs         catalogue + manifest validator (run by CI)
-└── examples/
-    └── <id>/
-        ├── manifest.json         required
-        ├── README.md             human-readable description
-        └── schemas/ | views/     optional, referenced by manifest entry points
+├── README.md                       this file
+├── LICENSE                         MIT (covers everything in this repo)
+├── index.json                      machine-readable top-level catalogue
+├── .scripts/validate.mjs           runs every per-subtree validator
+├── .github/workflows/validate.yml  CI gate on every PR
+├── plugin-templates/               (see plugin-templates/README.md)
+├── plugins/                        (see plugins/README.md ↗ TBD)
+└── extensions/                     (see extensions/README.md)
 ```
 
 ## Contributing
 
-1. Fork the repo.
-2. Add `examples/<your-id>/manifest.json` (and any JSON assets it references).
-3. Add an entry to `index.json`.
-4. Run `node .scripts/validate.mjs` locally.
-5. Open a PR. CI validates the manifest + index entry; merge requires green CI.
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full review process.
-
-## Why a public repo, not an opaque marketplace?
-
-- Every byte the desktop client installs is auditable in the open.
-- Anyone can fork and self-host their own extension catalogue by setting
-  `MEMEX_EXTENSIONS_INDEX_URL` in the desktop preferences.
-- Versioning is git-native — bump `version` in `manifest.json` and reference
-  a new tarball; users see the upgrade on next Marketplace refresh.
+Fork the repo, open a PR. CI validates every manifest + the top-level
+catalogue. See the per-subtree CONTRIBUTING files for the rules specific to
+plugins / templates / extensions.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT — see [LICENSE](./LICENSE). Subtrees inherit the same licence unless
+their own LICENSE file says otherwise.

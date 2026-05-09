@@ -1,0 +1,20 @@
+{
+  "$schema": "../../extensions/manifest.schema.json",
+  "id": "dataview-lite",
+  "name": "Dataview Lite",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthril",
+    "url": "https://anthril.com.au"
+  },
+  "description": "Embed live page lists in any wiki page. Mirrors a tiny subset of Obsidian's Dataview — frontmatter-driven `from <folder>` / `where <key> = <value>` queries rendered into the host page.",
+  "type": "plugin",
+  "kind": "plugin",
+  "permissions": [
+    "read",
+    "panel"
+  ],
+  "minimumMemexVersion": "0.3.0",
+  "compatibleProfiles": ["*"],
+  "tags": ["dataview", "queries", "panels", "reference"]
+}

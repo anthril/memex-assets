@@ -1,4 +1,4 @@
-name: Validate manifests
+name: Validate catalogue
 on:
   push:
     branches: [main]

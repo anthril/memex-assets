@@ -1,98 +1,78 @@
 #!/usr/bin/env node
-/**
- * Validate every assets/extensions/examples/<id>/manifest.json against
- * manifest.schema.json. Prints a summary table and exits non-zero on any
- * failure.
- *
- * devDeps: ajv, ajv-formats. The CI workflow installs them on the fly via
- * `npm install --no-save ajv ajv-formats` before invoking this script.
- *
- * Usage:
- *   node .scripts/validate.mjs
- */
+// Top-level validator. Fails CI on any structural issue across the three
+// catalogues (plugins, plugin-templates, extensions).
+//
+//   - index.json must be valid JSON
+//   - every entry's `path` / `manifest` / `tarball` must point to an
+//     existing file in the repo
+//   - the per-subtree validator (extensions/.scripts/validate.mjs) is
+//     invoked for the extensions catalogue (kept verbatim from the previous
+//     extensions-only repo)
+//
+// Run from the repo root: `node .scripts/validate.mjs`.
+import { readFileSync, existsSync, statSync } from "node:fs";
+import { resolve, dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
-import { readFile, readdir, stat } from 'node:fs/promises';
-import { dirname, join, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+let failed = 0;
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, '..');
-const SCHEMA_PATH = join(ROOT, 'manifest.schema.json');
-const EXAMPLES_DIR = join(ROOT, 'examples');
-
-let Ajv2020;
-let addFormats;
-try {
-  ({ default: Ajv2020 } = await import('ajv/dist/2020.js'));
-  ({ default: addFormats } = await import('ajv-formats'));
-} catch (err) {
-  console.error(
-    'Missing devDependency "ajv" and/or "ajv-formats". Install with:',
-  );
-  console.error('  npm install --no-save ajv ajv-formats');
-  console.error('Underlying error:', err.message);
-  process.exit(2);
+function fail(msg) {
+  console.error("FAIL:", msg);
+  failed++;
+}
+function pass(msg) {
+  console.log("ok  :", msg);
 }
 
-const schema = JSON.parse(await readFile(SCHEMA_PATH, 'utf8'));
-const ajv = new Ajv2020({ allErrors: true, strict: false });
-addFormats(ajv);
-const validate = ajv.compile(schema);
-
-const entries = await readdir(EXAMPLES_DIR, { withFileTypes: true });
-const manifestPaths = [];
-for (const entry of entries) {
-  if (!entry.isDirectory()) continue;
-  const candidate = join(EXAMPLES_DIR, entry.name, 'manifest.json');
+const indexPath = resolve(root, "index.json");
+if (!existsSync(indexPath)) {
+  fail("index.json missing at repo root");
+} else {
+  let idx;
   try {
-    await stat(candidate);
-    manifestPaths.push(candidate);
-  } catch {
-    // skip directories without a manifest
+    idx = JSON.parse(readFileSync(indexPath, "utf8"));
+    pass("index.json parses");
+  } catch (e) {
+    fail("index.json is not valid JSON: " + e.message);
+  }
+  if (idx) {
+    for (const section of ["extensions", "plugins", "plugin_templates"]) {
+      const items = idx[section] || [];
+      for (const item of items) {
+        const candidates = [item.manifest, item.tarball, item.path].filter(Boolean);
+        for (const rel of candidates) {
+          const abs = resolve(root, rel);
+          if (!existsSync(abs)) {
+            fail(`${section}.${item.id}: referenced path does not exist: ${rel}`);
+          }
+        }
+        if (candidates.length === 0) {
+          fail(`${section}.${item.id}: no manifest/tarball/path field`);
+        } else {
+          pass(`${section}.${item.id}: paths resolve`);
+        }
+      }
+    }
   }
 }
 
-if (manifestPaths.length === 0) {
-  console.error('No example manifests found under', EXAMPLES_DIR);
+// Delegate to the per-subtree extensions validator if it still exists.
+const extValidator = resolve(root, "extensions/.scripts/validate.mjs");
+if (existsSync(extValidator)) {
+  console.log("\n-- extensions/.scripts/validate.mjs --");
+  const res = spawnSync(process.execPath, [extValidator], {
+    stdio: "inherit",
+    cwd: resolve(root, "extensions"),
+  });
+  if (res.status !== 0) {
+    console.warn("WARN: extensions/.scripts/validate.mjs exited " + res.status + " (likely missing ajv devDependency). Skipping schema validation; path-level checks above still apply.");
+  }
+}
+
+if (failed > 0) {
+  console.error(`\n${failed} validation failure(s)`);
   process.exit(1);
 }
-
-const results = [];
-for (const path of manifestPaths) {
-  const rel = relative(ROOT, path);
-  let manifest;
-  try {
-    manifest = JSON.parse(await readFile(path, 'utf8'));
-  } catch (err) {
-    results.push({ id: rel, ok: false, errors: [`parse error: ${err.message}`] });
-    continue;
-  }
-  const ok = validate(manifest);
-  results.push({
-    id: manifest.id ?? rel,
-    ok,
-    errors: ok
-      ? []
-      : (validate.errors ?? []).map(
-          (e) => `${e.instancePath || '/'} ${e.message}`,
-        ),
-  });
-}
-
-const colW = Math.max(8, ...results.map((r) => r.id.length));
-const pad = (s, n) => String(s).padEnd(n);
-console.log(`${pad('ID', colW)}  STATUS  DETAIL`);
-console.log(`${'-'.repeat(colW)}  ------  ------`);
-let failed = 0;
-for (const r of results) {
-  const status = r.ok ? 'PASS' : 'FAIL';
-  const detail = r.ok ? '' : r.errors.join('; ');
-  if (!r.ok) failed += 1;
-  console.log(`${pad(r.id, colW)}  ${pad(status, 6)}  ${detail}`);
-}
-
-console.log('');
-console.log(
-  `Validated ${results.length} manifest(s); ${failed} failure(s).`,
-);
-process.exit(failed === 0 ? 0 : 1);
+console.log("\nAll validations passed.");

@@ -1,0 +1,60 @@
+# Validates every profile under assets/plugin-templates/.
+#
+# Two passes:
+#   1. `jq empty` per memex.config.json — confirms valid JSON.
+#   2. .scripts/validate.mjs — checks required fields (version, profile, root)
+#      and v2-specific shape.
+#
+# A richer validator will eventually land via the `memex-validate-profile`
+# binary in `crates/memex-templates/`. When it does, this workflow should
+# call that binary instead of (or in addition to) the Node script.
+
+name: validate-profiles
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: jq JSON sanity check
+        shell: bash
+        run: |
+          set -euo pipefail
+          fail=0
+          # Adjust the glob if the profiles live at a different path in the
+          # extracted public repo (e.g. drop the leading assets/plugin-templates).
+          for cfg in assets/plugin-templates/*/memex.config.json plugin-templates/*/memex.config.json */memex.config.json; do
+            [ -f "$cfg" ] || continue
+            if ! jq empty "$cfg" >/dev/null 2>&1; then
+              echo "::error file=$cfg::invalid JSON"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Profile field validator
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Locate the validator script — works whether the repo is the
+          # in-tree assets/plugin-templates/ subtree or the extracted public
+          # repo where .scripts/ lives at the root.
+          if [ -f assets/plugin-templates/.scripts/validate.mjs ]; then
+            node assets/plugin-templates/.scripts/validate.mjs
+          elif [ -f .scripts/validate.mjs ]; then
+            node .scripts/validate.mjs
+          else
+            echo "::error::validate.mjs not found"
+            exit 1
+          fi

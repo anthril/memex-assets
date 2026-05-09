@@ -1,0 +1,108 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/memex.config.schema.json",
+  "version": "2",
+  "profile": "personal-knowledge-graph",
+  "root": ".memex",
+
+  "allowedTopLevel": [
+    "README.md",
+    "index.md",
+    "log.md",
+    "notes",
+    "literature",
+    "fleeting",
+    "maps",
+    "daily",
+    ".templates",
+    ".plugins",
+    ".state"
+  ],
+
+  "datedFolders": {
+    "paths": ["daily"],
+    "format": "YYYY-MM-DD"
+  },
+
+  "readmeRequired": [],
+
+  "frontmatter": {
+    "appliesTo": ["**/*.md"],
+    "required": ["title", "slug", "type", "status", "created", "updated"],
+    "enum": {
+      "type": ["note", "literature", "fleeting", "map", "daily", "topic"],
+      "status": ["draft", "active", "deprecated"]
+    }
+  },
+
+  "naming": {
+    "exceptions": ["README.md"]
+  },
+
+  "log": {
+    "path": "log.md",
+    "entryPrefix": "## [{date}] {event} | {subject}"
+  },
+
+  "index": {
+    "path": "index.md",
+    "sections": []
+  },
+
+  "sectionsV2": [
+    {
+      "name": "Maps of content",
+      "icon": "map",
+      "filter": { "any": [
+        { "type": "map" },
+        { "pathPrefix": "maps/" }
+      ]}
+    },
+    {
+      "name": "Atomic notes",
+      "icon": "file-text",
+      "filter": { "type": "note" }
+    },
+    {
+      "name": "Literature",
+      "icon": "book",
+      "filter": { "type": "literature" }
+    },
+    {
+      "name": "Fleeting",
+      "icon": "zap",
+      "filter": { "pathPrefix": "fleeting/" }
+    }
+  ],
+
+  "surfaces": {
+    "sidebar":         { "showSections": false },
+    "commandPalette":  { "showSections": true  },
+    "homePage":        { "showSections": true  }
+  },
+
+  "dailyNotes": {
+    "folder": "daily",
+    "dateFormat": "%Y-%m-%d",
+    "template": "daily"
+  },
+
+  "templates": {
+    "folder": ".templates",
+    "defaults": {
+      "note": "note",
+      "literature": "literature",
+      "fleeting": "fleeting",
+      "daily": "daily"
+    }
+  },
+
+  "plugins": {
+    "folder": ".plugins",
+    "disabled": []
+  },
+
+  "search": {
+    "engine": "tantivy",
+    "maxContextPages": 5
+  }
+}

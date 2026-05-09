@@ -1,0 +1,112 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/memex.config.schema.json",
+  "version": "1",
+  "profile": "engineering-ops",
+  "root": ".memex",
+
+  "allowedTopLevel": [
+    "README.md",
+    "AGENTS.md",
+    "index.md",
+    "log.md",
+    ".audits",
+    ".research",
+    ".incidents",
+    ".open-questions",
+    ".rules",
+    ".state",
+    "planning",
+    "entities",
+    "platform",
+    "workers",
+    "agents",
+    "workflows",
+    "runbooks",
+    "processes",
+    "environments"
+  ],
+
+  "datedFolders": {
+    "paths": [".audits", ".research", ".incidents"],
+    "format": "DDMMYYYY-HHMM"
+  },
+
+  "readmeRequired": [
+    "entities/*",
+    "planning/prds/*",
+    "planning/rfcs/*",
+    "platform/features/*",
+    "platform/systems/*",
+    "platform/integrations/*",
+    "workers/*",
+    "agents/*",
+    "workflows/*",
+    "runbooks/*",
+    "processes/*",
+    "environments/*"
+  ],
+
+  "frontmatter": {
+    "appliesTo": ["**/README.md", "**/AGENTS.md"],
+    "required": ["title", "slug", "type", "status", "owner", "created", "updated"],
+    "enum": {
+      "type": [
+        "feature",
+        "system",
+        "entity",
+        "worker",
+        "agent",
+        "workflow",
+        "integration",
+        "runbook",
+        "process",
+        "environment",
+        "prd",
+        "rfc",
+        "decision",
+        "incident",
+        "audit",
+        "research",
+        "open-question",
+        "rule"
+      ],
+      "status": ["draft", "active", "deprecated"]
+    }
+  },
+
+  "naming": {
+    "exceptions": ["README.md", "AGENTS.md", "CHANGELOG.md", "CONVENTIONS.md", ".resolved"]
+  },
+
+  "codeToDocMapping": [],
+
+  "log": {
+    "path": "log.md",
+    "entryPrefix": "## [{date}] {event} | {subject}"
+  },
+
+  "index": {
+    "path": "index.md",
+    "sections": [
+      "Planning",
+      "Entities",
+      "Features",
+      "Systems",
+      "Integrations",
+      "Workers",
+      "Agents",
+      "Workflows",
+      "Runbooks",
+      "Processes",
+      "Environments",
+      "Incidents",
+      "Open Questions",
+      "Recent Activity"
+    ]
+  },
+
+  "search": {
+    "engine": "grep",
+    "maxContextPages": 3
+  }
+}

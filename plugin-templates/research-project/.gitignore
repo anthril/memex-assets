@@ -1,0 +1,15 @@
+# Memex sidecar state.
+# Spaced-repetition scheduling lives here (T11). Personal review history is
+# noisy in commit history and rarely useful to teammates — keeping it local-only
+# avoids polluting diffs and keeps each user's queue private.
+.sr-state.json
+
+# Cached search index (Tantivy). Always regenerable from the markdown corpus.
+.search/
+
+# OS / editor noise.
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

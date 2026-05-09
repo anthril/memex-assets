@@ -1,0 +1,130 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/memex.config.schema.json",
+  "version": "2",
+  "profile": "company",
+  "root": ".memex",
+
+  "allowedTopLevel": [
+    "README.md",
+    "index.md",
+    "log.md",
+    "about.md",
+    "people",
+    "teams",
+    "products",
+    "customers",
+    "policies",
+    "playbooks",
+    "meetings",
+    "decisions",
+    "okrs",
+    ".templates",
+    ".plugins",
+    ".state"
+  ],
+
+  "datedFolders": {
+    "paths": ["meetings", "okrs"],
+    "format": "DDMMYYYY-HHMM"
+  },
+
+  "readmeRequired": [
+    "teams/*",
+    "products/*",
+    "customers/*"
+  ],
+
+  "frontmatter": {
+    "appliesTo": ["**/*.md"],
+    "required": ["title", "slug", "type", "status", "created", "updated"],
+    "enum": {
+      "type": [
+        "person",
+        "team",
+        "product",
+        "customer",
+        "policy",
+        "playbook",
+        "meeting",
+        "decision",
+        "okr",
+        "topic"
+      ],
+      "status": ["draft", "active", "deprecated", "proposed", "accepted", "superseded"],
+      "confidentiality": ["public", "internal", "restricted"]
+    }
+  },
+
+  "naming": {
+    "exceptions": ["README.md", "CHANGELOG.md"]
+  },
+
+  "log": {
+    "path": "log.md",
+    "entryPrefix": "## [{date}] {event} | {subject}"
+  },
+
+  "index": {
+    "path": "index.md",
+    "sections": []
+  },
+
+  "sectionsV2": [
+    {
+      "name": "Decisions",
+      "icon": "git-branch",
+      "filter": { "any": [
+        { "type": "decision" },
+        { "pathPrefix": "decisions/" }
+      ]}
+    },
+    {
+      "name": "Active OKRs",
+      "icon": "target",
+      "filter": { "all": [
+        { "type": "okr" },
+        { "frontmatter": { "key": "status", "value": "active" } }
+      ]}
+    },
+    {
+      "name": "Playbooks",
+      "icon": "book-open",
+      "filter": { "pathPrefix": "playbooks/" }
+    },
+    {
+      "name": "Customers",
+      "icon": "users",
+      "filter": { "type": "customer" }
+    },
+    {
+      "name": "Recent meetings",
+      "icon": "calendar",
+      "filter": { "pathPrefix": "meetings/" }
+    }
+  ],
+
+  "surfaces": {
+    "sidebar":         { "showSections": false },
+    "commandPalette":  { "showSections": true  },
+    "homePage":        { "showSections": true  }
+  },
+
+  "templates": {
+    "folder": ".templates",
+    "defaults": {
+      "meeting": "meeting",
+      "decision": "decision",
+      "okr": "okr"
+    }
+  },
+
+  "plugins": {
+    "folder": ".plugins",
+    "disabled": []
+  },
+
+  "search": {
+    "engine": "tantivy",
+    "maxContextPages": 5
+  }
+}
