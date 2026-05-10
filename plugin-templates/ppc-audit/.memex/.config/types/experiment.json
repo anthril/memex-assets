@@ -1,0 +1,28 @@
+{
+  "id": "experiment",
+  "label": "Experiment",
+  "icon": "flask-conical",
+  "folder": "optimisations",
+  "template": ".templates/experiment.md",
+  "frontmatter": {
+    "required": ["title", "status", "hypothesis"],
+    "properties": {
+      "status": {
+        "kind": "enum",
+        "values": ["planned", "running", "concluded"],
+        "default": "planned"
+      },
+      "result": {
+        "kind": "enum",
+        "values": ["pending", "winner", "loser", "inconclusive"],
+        "default": "pending"
+      },
+      "hypothesis": { "kind": "text" },
+      "metric": { "kind": "text" },
+      "started": { "kind": "date" },
+      "ended": { "kind": "date" }
+    }
+  },
+  "right_panel": ["properties", "backlinks"],
+  "hidden_fields": ["title"]
+}

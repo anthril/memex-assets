@@ -1,0 +1,30 @@
+{
+  "id": "recommendation",
+  "label": "Recommendation",
+  "icon": "lightbulb",
+  "folder": ".review",
+  "template": ".templates/recommendation.md",
+  "frontmatter": {
+    "required": ["title", "status"],
+    "properties": {
+      "status": {
+        "kind": "enum",
+        "values": ["proposed", "approved", "implemented", "rejected"],
+        "default": "proposed"
+      },
+      "impact": {
+        "kind": "enum",
+        "values": ["low", "medium", "high"],
+        "default": "medium"
+      },
+      "effort": {
+        "kind": "enum",
+        "values": ["low", "medium", "high"],
+        "default": "medium"
+      },
+      "finding": { "kind": "relation" }
+    }
+  },
+  "right_panel": ["properties", "backlinks", "comments"],
+  "hidden_fields": ["title"]
+}

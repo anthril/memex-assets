@@ -1,7 +1,12 @@
-# Memex sidecar state.
-# Spaced-repetition scheduling lives here (T11). Personal review history is
-# noisy in commit history and rarely useful to teammates — keeping it local-only
-# avoids polluting diffs and keeps each user's queue private.
+# Memex runtime state.
+# Holds engine-managed sidecars: spaced-repetition card scheduling (T11),
+# search caches, and any other personal runtime state. Excluded by default
+# because review history etc. is noisy in commit history and rarely useful
+# to teammates; keeping it local also keeps each user's review queue private.
+.state/
+
+# Legacy SR-state path (pre-`.state/` migration) — kept ignored for older
+# workspaces that haven't been opened in the new shell yet.
 .sr-state.json
 
 # Cached search index (Tantivy). Always regenerable from the markdown corpus.

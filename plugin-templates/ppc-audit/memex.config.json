@@ -1,0 +1,82 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/memex.config.schema.json",
+  "version": "2",
+  "profile": "ppc-audit",
+  "root": ".memex",
+
+  "allowedTopLevel": [
+    "README.md",
+    "AGENTS.md",
+    "index.md",
+    "log.md",
+    ".config",
+    ".templates",
+    ".tasks",
+    ".open-questions",
+    ".review",
+    ".state",
+    "accounts",
+    "audits",
+    "optimisations"
+  ],
+
+  "datedFolders": {
+    "paths": ["audits"],
+    "format": "DDMMYYYY-HHMM"
+  },
+
+  "frontmatter": {
+    "appliesTo": ["**/*.md"],
+    "required": ["title", "type", "status", "created", "updated"],
+    "enum": {
+      "type": [
+        "audit",
+        "audit-task",
+        "finding",
+        "recommendation",
+        "experiment",
+        "open-question",
+        "optimisation",
+        "account",
+        "rule"
+      ],
+      "status": [
+        "draft",
+        "in-progress",
+        "blocked",
+        "done",
+        "open",
+        "triaged",
+        "wont-fix",
+        "proposed",
+        "approved",
+        "implemented",
+        "rejected",
+        "planned",
+        "running",
+        "concluded"
+      ]
+    }
+  },
+
+  "naming": {
+    "exceptions": ["README.md", "AGENTS.md", "CHANGELOG.md", ".resolved"]
+  },
+
+  "log": {
+    "path": "log.md",
+    "entryPrefix": "## [{date}] {event} | {subject}"
+  },
+
+  "index": {
+    "path": "index.md",
+    "sections": [
+      "Accounts",
+      "Audits",
+      "Findings",
+      "Recommendations",
+      "Experiments",
+      "Open questions"
+    ]
+  }
+}

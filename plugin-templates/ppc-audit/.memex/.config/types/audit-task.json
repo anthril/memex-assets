@@ -1,0 +1,25 @@
+{
+  "id": "audit-task",
+  "label": "Audit task",
+  "icon": "check-square",
+  "folder": ".tasks",
+  "template": ".templates/audit-task.md",
+  "frontmatter": {
+    "required": ["title", "status"],
+    "properties": {
+      "status": {
+        "kind": "enum",
+        "values": ["draft", "in-progress", "blocked", "done"],
+        "default": "draft"
+      },
+      "priority": {
+        "kind": "enum",
+        "values": ["P0", "P1", "P2", "P3"],
+        "default": "P2"
+      },
+      "due": { "kind": "date" }
+    }
+  },
+  "right_panel": ["properties", "comments", "backlinks"],
+  "hidden_fields": ["title"]
+}

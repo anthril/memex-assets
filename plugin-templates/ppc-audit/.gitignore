@@ -1,0 +1,14 @@
+# Memex runtime state (sr scheduling, internal caches).
+.state/
+# Legacy SR-state location kept ignored for back-compat.
+.sr-state.json
+
+# Cached search index (Tantivy). Always regenerable from the markdown corpus.
+.search/
+
+# OS / editor noise.
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

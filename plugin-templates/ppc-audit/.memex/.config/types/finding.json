@@ -1,0 +1,29 @@
+{
+  "id": "finding",
+  "label": "Finding",
+  "icon": "alert-triangle",
+  "folder": "audits",
+  "template": ".templates/audit-finding.md",
+  "frontmatter": {
+    "required": ["title", "status", "severity"],
+    "properties": {
+      "status": {
+        "kind": "enum",
+        "values": ["open", "triaged", "wont-fix", "done"],
+        "default": "open"
+      },
+      "severity": {
+        "kind": "enum",
+        "values": ["low", "medium", "high", "critical"],
+        "default": "medium"
+      },
+      "channel": {
+        "kind": "enum",
+        "values": ["google-search", "google-shopping", "google-pmax", "meta-feed", "meta-stories", "meta-reels", "meta-other", "cross-channel"]
+      },
+      "account": { "kind": "relation" }
+    }
+  },
+  "right_panel": ["properties", "backlinks", "comments"],
+  "hidden_fields": ["title"]
+}
