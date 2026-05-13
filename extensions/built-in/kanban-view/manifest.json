@@ -1,0 +1,31 @@
+{
+  "$schema": "../../manifest.schema.json",
+  "id": "kanban-view",
+  "name": "Kanban View",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthril",
+    "url": "https://anthril.com.au"
+  },
+  "description": "Renders any section as a kanban board, columnising pages by their `status` frontmatter (To Do / In Progress / Done). Drag a card to update its status. Ships bundled with Memex (ADR 0038); disable in Settings → Extensions to hide.",
+  "type": "extension",
+  "extensionType": "view",
+  "entryPoints": {
+    "view": "views/kanban.view.json",
+    "quickBar": {
+      "icon": "columns-3",
+      "label": "Kanban",
+      "action": "kanban-view.open",
+      "shortcut": "Mod+B"
+    }
+  },
+  "permissions": [
+    "frontmatter:write",
+    "navigation",
+    "view"
+  ],
+  "minimumMemexVersion": "0.3.0",
+  "compatibleProfiles": ["*"],
+  "tags": ["view", "kanban", "tasks", "built-in"],
+  "bundledWith": "memex"
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/extension-view.schema.json",
+  "id": "board",
+  "label": "Kanban board",
+  "icon": "columns-3",
+  "module": "kanban/view",
+  "description": "Columnise pages by their `status` frontmatter. Drag a card to update its status.",
+  "frontmatter": {
+    "requires": ["status"],
+    "groupBy": "status"
+  },
+  "compatible": {
+    "anyType": ["task", "feature", "bug", "story", "epic"],
+    "anyPathPrefix": ["tasks/", "epics/", "planning/", "platform/features/"]
+  }
+}

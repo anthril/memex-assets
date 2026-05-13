@@ -1,0 +1,29 @@
+{
+  "$schema": "../../manifest.schema.json",
+  "id": "timeline-view",
+  "name": "Timeline View",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthril",
+    "url": "https://anthril.com.au"
+  },
+  "description": "Horizontal scrubbable timeline over date-bearing pages. Same data source as Calendar; renders as a one-row scrubber instead of a grid. Ships bundled with Memex (ADR 0038).",
+  "type": "extension",
+  "extensionType": "view",
+  "entryPoints": {
+    "view": "views/timeline.view.json",
+    "quickBar": {
+      "icon": "clock",
+      "label": "Timeline",
+      "action": "timeline-view.open"
+    }
+  },
+  "permissions": [
+    "navigation",
+    "view"
+  ],
+  "minimumMemexVersion": "0.3.0",
+  "compatibleProfiles": ["*"],
+  "tags": ["view", "timeline", "dated", "built-in"],
+  "bundledWith": "memex"
+}

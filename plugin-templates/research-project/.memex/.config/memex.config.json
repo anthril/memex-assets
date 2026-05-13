@@ -60,7 +60,7 @@
   },
 
   "naming": {
-    "exceptions": ["README.md", "AGENTS.md", "CHANGELOG.md", "ROADMAP.md", ".resolved"]
+    "exceptions": ["README.md", "AGENTS.md", "CHANGELOG.md", "ROADMAP.md"]
   },
 
   "codeToDocMapping": [],

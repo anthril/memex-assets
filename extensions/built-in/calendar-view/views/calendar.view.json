@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/extension-view.schema.json",
+  "id": "calendar",
+  "label": "Calendar",
+  "icon": "calendar-days",
+  "module": "calendar/view",
+  "description": "Month grid over date-bearing pages. Pages with `date:` frontmatter land on the matching day.",
+  "frontmatter": {
+    "requires": ["date"],
+    "groupBy": "date"
+  },
+  "compatible": {
+    "anyPathPrefix": ["daily/", "tasks/", "milestones/", "meetings/"]
+  }
+}

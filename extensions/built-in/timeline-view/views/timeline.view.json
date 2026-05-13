@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthril/memex/main/crates/memex-core/schemas/extension-view.schema.json",
+  "id": "timeline",
+  "label": "Timeline",
+  "icon": "clock",
+  "module": "timeline/view",
+  "description": "Horizontal scrubbable timeline over date-bearing pages.",
+  "frontmatter": {
+    "requires": ["date"],
+    "orderBy": "date"
+  },
+  "compatible": {
+    "anyPathPrefix": ["tasks/", "milestones/", "meetings/", "planning/"]
+  }
+}

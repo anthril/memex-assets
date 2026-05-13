@@ -75,7 +75,7 @@
   },
 
   "naming": {
-    "exceptions": ["README.md", "AGENTS.md", "CHANGELOG.md", "CONVENTIONS.md", ".resolved"]
+    "exceptions": ["README.md", "AGENTS.md", "CHANGELOG.md", "CONVENTIONS.md"]
   },
 
   "codeToDocMapping": [],

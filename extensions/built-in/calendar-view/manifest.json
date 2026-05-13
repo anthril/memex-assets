@@ -1,0 +1,30 @@
+{
+  "$schema": "../../manifest.schema.json",
+  "id": "calendar-view",
+  "name": "Calendar View",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthril",
+    "url": "https://anthril.com.au"
+  },
+  "description": "Month grid view over date-bearing pages. Driven by `crates/memex-core/src/date_extract.rs` — pages with `date:` frontmatter (or a `YYYY-MM-DD` filename prefix) land on the matching day. Drag to rebound. Ships bundled with Memex (ADR 0038).",
+  "type": "extension",
+  "extensionType": "view",
+  "entryPoints": {
+    "view": "views/calendar.view.json",
+    "quickBar": {
+      "icon": "calendar-days",
+      "label": "Calendar",
+      "action": "calendar-view.open"
+    }
+  },
+  "permissions": [
+    "frontmatter:write",
+    "navigation",
+    "view"
+  ],
+  "minimumMemexVersion": "0.3.0",
+  "compatibleProfiles": ["*"],
+  "tags": ["view", "calendar", "dated", "built-in"],
+  "bundledWith": "memex"
+}

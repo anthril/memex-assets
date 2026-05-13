@@ -35,7 +35,7 @@ Every task / epic / milestone page MUST declare:
 | `slug`     | yes      | `fix-login-race`       | Filename + URL slug                      |
 | `type`     | yes      | `task`                 | View filter; one of task/epic/milestone/bug/spike/chore |
 | `status`   | yes      | `in-progress`          | Kanban column; one of backlog/planned/in-progress/blocked/in-review/done |
-| `owner`    | yes      | `alice`                | Card chip; "@me" assignment              |
+| `owner`    | optional | `alice`                | Card chip; "@me" assignment              |
 | `date`     | yes      | `2026-05-09`           | Calendar slot + Timeline X-axis position |
 | `created`  | yes      | `2026-05-09`           | Audit / age sort                         |
 | `updated`  | yes      | `2026-05-09`           | Last-touched age indicator               |
